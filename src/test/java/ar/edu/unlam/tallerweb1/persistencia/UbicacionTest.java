@@ -53,9 +53,10 @@ public class UbicacionTest extends SpringTest {
 		
 		List<Pais> paisesConCapitalAlNorteDelTropicoDeCancer = new ArrayList <Pais>();
 		
-		Criteria paisesCriteria = getSession().createCriteria(Pais.class);
-		paisesCriteria.createAlias("capital", "ciudad", JoinType.INNER_JOIN)
-					.createAlias("ciudad.ubicacionGeografica", "ubicacion", JoinType.INNER_JOIN, Restrictions.gt("latitud", latitudTropicoDeCancer) );
+		Criteria paisesCriteria = getSession().createCriteria(Pais.class)
+						.createAlias("capital", "ciudad")
+						.createAlias("ciudad.ubicacionGeografica", "ubicacion")
+						.add(Restrictions.gt("ubicacion.latitud", latitudTropicoDeCancer));
 		
 		paisesConCapitalAlNorteDelTropicoDeCancer = paisesCriteria.list();			
 		assertThat(paisesConCapitalAlNorteDelTropicoDeCancer).hasSize(2);

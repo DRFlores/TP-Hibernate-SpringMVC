@@ -41,9 +41,11 @@ public class CiudadTest extends SpringTest  {
 		session.save(paris);
 		session.save(bsas);
 		
-		List<Ubicacion> ciudadesDelHemisferioSur = new ArrayList <Ubicacion>();
+		List<Ciudad> ciudadesDelHemisferioSur = new ArrayList <Ciudad>();
 		
-		ciudadesDelHemisferioSur = getSession().createCriteria(Ubicacion.class).add(Restrictions.lt("latitud", latitudHemisferioSur)).list();
+		ciudadesDelHemisferioSur = getSession().createCriteria(Ciudad.class)
+								.createAlias("ubicacionGeografica", "ubicacion")
+								.add(Restrictions.lt("ubicacion.latitud", latitudHemisferioSur)).list();
 		
 		assertThat(ciudadesDelHemisferioSur).hasSize(2);
 
