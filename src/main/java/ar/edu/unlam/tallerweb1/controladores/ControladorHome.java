@@ -2,6 +2,7 @@ package ar.edu.unlam.tallerweb1.controladores;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,13 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorHome {
 
-	@RequestMapping(path = {"/", "/procesar-operacion","/home"}, method = RequestMethod.GET)
+	@RequestMapping(path = {"/", "/home"}, method = RequestMethod.GET)
 	public ModelAndView inicio() {
 		return new ModelAndView("home");
 	}
 	
-	@RequestMapping(path = "/procesar-operacion", method = RequestMethod.POST)
-	public ModelAndView procesarOperacion(@RequestParam("operacion") String operacion,@RequestParam("texto") String texto) {
+	@RequestMapping(path = "/procesar-operacion/{operacion}/{cadena}", method = RequestMethod.GET)
+	public ModelAndView procesarOperacion(@PathVariable("operacion") String operacion,@PathVariable("cadena") String cadena) {
 		
 		String cadenaResultado ="";
 		String nombreOperacion ="";
@@ -26,28 +27,31 @@ public class ControladorHome {
 		switch(operacion) {
 		case "pasarAMayuscula":
 			nombreOperacion = "Pasar a mayúscula";
-			cadenaResultado = texto.toUpperCase();
+			cadenaResultado = cadena.toUpperCase();
 			break;
 		case "pasarAMinuscula":
 			nombreOperacion = "Pasar a minúscula";
-			cadenaResultado = texto.toLowerCase();
+			cadenaResultado = cadena.toLowerCase();
 			break;
 		case "invertirOrden":
 			nombreOperacion = "Invertir orden";
-			StringBuilder builder=new StringBuilder(texto);
+			StringBuilder builder=new StringBuilder(cadena);
 			cadenaResultado = builder.reverse().toString();
 			break;
 		case "cantidadDeCaracteres":
 			nombreOperacion = "Cantidad de caracteres";
-			numeroResultado = texto.length();
+			numeroResultado = cadena.length();
 			retornoUnNumero = true;
 			break;
+		default:
+		   return new ModelAndView("home");
+		    
 		}
 		
 		ModelMap model = new ModelMap();
 		
 		model.put("nombreOperacion", nombreOperacion);
-		model.put("cadena", texto);	
+		model.put("cadena", cadena);	
 		
 		if(retornoUnNumero) {
 			model.put("cadenaResultado", numeroResultado);
